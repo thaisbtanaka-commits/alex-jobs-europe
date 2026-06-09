@@ -1,85 +1,115 @@
 import nodemailer from 'nodemailer';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
 
-const { GMAIL_USER, GMAIL_APP_PASSWORD, DEST_EMAIL } = process.env;
+const { GMAIL_USER, GMAIL_APP_PASSWORD, DEST_EMAIL, THEIRSTACK_API_KEY } = process.env;
 
 const SEARCH_TERMS = [
-  'quality engineer', 'supplier quality engineer', 'supplier quality',
-  'qa engineer', 'quality manager', 'process quality', 'quality assurance',
-  'qa', 'quality specialist', 'quality coordinator'
+  'quality engineer',
+  'supplier quality engineer',
+  'supplier quality',
+  'qa engineer',
+  'quality manager',
+  'process quality',
+  'quality assurance',
+  'qa',
+  'quality specialist',
+  'quality coordinator'
 ];
 
-const VISA_URL = 'https://www.arbeitnow.com/api/job-board-api?visa_sponsorship=false';
+const THEIRSTACK_URL = 'https://api.theirstack.com/v1/jobs/search';
+
+const EUROPE_COUNTRIES = ['DE', 'AT', 'CH', 'NL', 'BE', 'FR', 'DK', 'SE', 'NO', 'FI', 'IE', 'PT', 'ES', 'IT', 'PL', 'CZ', 'HU'];
+
+const SENT_JOBS_FILE = 'sent-jobs.json';
+
+function loadSentJobs() {
+  if (!existsSync(SENT_JOBS_FILE)) {
+    return { sent: [], created: new Date().toISOString().slice(0, 10) };
+  }
+  return JSON.parse(readFileSync(SENT_JOBS_FILE, 'utf-8'));
+}
+
+function saveSentJobs(data) {
+  const maxHistory = 200;
+  if (data.sent.length > maxHistory) {
+    data.sent = data.sent.slice(-maxHistory);
+  }
+  writeFileSync(SENT_JOBS_FILE, JSON.stringify(data, null, 2));
+}
 
 async function fetchJobs() {
   const allJobs = [];
-  const seen = new Set();
+
+  if (!THEIRSTACK_API_KEY) {
+    console.error('THEIRSTACK_API_KEY is not set. Exiting.');
+    return allJobs;
+  }
 
   for (const term of SEARCH_TERMS) {
-    const url = `${VISA_URL}&query=${encodeURIComponent(term)}`;
     try {
-      const res = await fetch(url);
-      const json = await res.json();
-      if (json && Array.isArray(json.data)) {
-        for (const job of json.data.slice(0, 5)) {
-          if (job && job.title && job.company && !seen.has(job.slug)) {
-            seen.add(job.slug);
-            allJobs.push(job);
-          }
-        }
+      const res = await fetch(THEIRSTACK_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${THEIRSTACK_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          job_title_or: [term],
+          job_country_code_or: EUROPE_COUNTRIES,
+          posted_at_max_age_days: 30,
+          limit: 5
+        })
+      });
+
+      if (!res.ok) {
+        console.error(`HTTP ${res.status} for "${term}"`);
+        const text = await res.text();
+        console.error(text);
+        continue;
       }
-    } catch (e) {
-      console.error(`Error fetching ${term}:`, e.message);
+
+      const json = await res.json();
+      const jobs = json.data || [];
+
+      for (const job of jobs) {
+        allJobs.push({
+          id: job.id,
+          title: job.job_title,
+          company: job.company,
+          country: job.locations?.[0]?.country_name || 'Europe',
+          posted: job.date_posted,
+          link: job.linkedin_url || job.source_url || `https://theirstack.com/jobs/${job.id}`,
+          description: job.description || '',
+          searchTerm: term
+        });
+      }
+    } catch (err) {
+      console.error(`Error fetching for "${term}":`, err.message);
     }
   }
+
   return allJobs;
 }
 
-async function loadSentJobs() {
-  try {
-    const res = await fetch(
-      'https://raw.githubusercontent.com/thaisbtanaka-commits/alex-jobs-europe/main/sent-jobs.json',
-      { cache: 'no-store' }
-    );
-    if (res.ok) {
-      const data = await res.json();
-      return new Set(data.sent || []);
-    }
-  } catch {}
-  return new Set();
+function formatJobList(jobs) {
+  if (jobs.length === 0) return 'Nenhuma nova vaga encontrada.';
+  return jobs.map((job, i) => {
+    return `
+<b>#${i + 1} ${job.title}</b>
+<b>Empresa:</b> ${job.company}
+<b>País:</b> ${job.country}
+<b>Publicada:</b> ${job.posted}
+<b>Busca:</b> ${job.searchTerm}
+<a href="${job.link}">Ver vaga</a>
+`;
+  }).join('');
 }
 
-function formatJob(j) {
-  const loc = j.location || 'Remoto';
-  const remote = j.remote ? ' [REMOTO]' : '';
-  return `${j.title} - ${j.company} (${loc}${remote})
-${j.url ? j.url : ''}`;
-}
-
-async function main() {
+async function sendAlert(jobs) {
   if (!GMAIL_USER || !GMAIL_APP_PASSWORD || !DEST_EMAIL) {
-    console.error('Missing env vars. Exiting.');
+    console.error('Email credentials not set');
     return;
   }
-
-  console.log('Fetching jobs...');
-  const jobs = await fetchJobs();
-  console.log(`Found ${jobs.length} jobs.`);
-
-  const sent = await loadSentJobs();
-  const newJobs = jobs.filter(j => !sent.has(j.slug));
-  console.log(`${newJobs.length} new jobs.`);
-
-  if (newJobs.length === 0) {
-    console.log('No new jobs. Exiting.');
-    return;
-  }
-
-  const body = newJobs.map(formatJob).join('\n\n---\n\n');
-  const htmlBody = newJobs.map(j => {
-    const loc = j.location || 'Remoto';
-    const remote = j.remote ? ' [REMOTO]' : '';
-    return `<p><strong>${j.title}</strong><br/>${j.company} - ${loc}${remote}<br/><a href="${j.url}">${j.url}</a></p>`;
-  }).join('<hr/>');
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -89,20 +119,42 @@ async function main() {
     }
   });
 
-  const date = new Date().toLocaleString('pt-BR', { timeZone: 'Europe/Vienna' });
+  const jobHtml = formatJobList(jobs);
 
   await transporter.sendMail({
     from: GMAIL_USER,
     to: DEST_EMAIL,
-    subject: `Novas Vagas Encontradas - ${date}`,
-    text: `Novas vagas encontradas - ${date}\n========================================\n\n${body}\n\nTotal: ${newJobs.length} vaga(s) nova(s)`,
-    html: `<h2>Novas vagas encontradas - ${date}</h2>${htmlBody}<p><strong>Total: ${newJobs.length} vaga(s) nova(s)</strong></p>`
+    subject: `Job Alert - ${jobs.length} nova(s) vaga(s) de Quality`,
+    html: `
+      <h2>Job Alert - Quality Engineering</h2>
+      <p>Foram encontradas ${jobs.length} vaga(s) nova(s):</p>
+      ${jobHtml}
+      <p><small>Envio automático via GitHub Actions</small></p>
+    `
   });
 
-  console.log('Email sent!');
+  console.log(`Email sent with ${jobs.length} jobs`);
+}
 
-  const updated = [...sent, ...newJobs.map(j => j.slug)];
-  console.log(JSON.stringify({ sent: updated.slice(-200) }));
+async function main() {
+  const sentData = loadSentJobs();
+  const sent = new Set(sentData.sent);
+
+  const allJobs = await fetchJobs();
+  console.log(`Fetched ${allJobs.length} jobs from API`);
+
+  const newJobs = allJobs.filter(job => !sent.has(String(job.id)));
+  console.log(`Found ${newJobs.length} new jobs`);
+
+  if (newJobs.length > 0) {
+    for (const job of newJobs) {
+      sentData.sent.push(String(job.id));
+    }
+    saveSentJobs(sentData);
+    await sendAlert(newJobs);
+  } else {
+    console.log('No new jobs to send');
+  }
 }
 
 main().catch(console.error);
