@@ -1,0 +1,13 @@
+{
+  "name": "alex-jobs-europe",
+  "version": "1.0.0",
+  "description": "Buscador automatizado de vagas de qualidade na Europa",
+  "type": "module",
+  "main": "send-alert.mjs",
+  "scripts": {
+    "alert": "node send-alert.mjs"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.0"
+  }
+}
