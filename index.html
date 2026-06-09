@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Alex Jobs — Quality Europe Pro</title>
+<style>
+:root,[data-theme="light"]{--bg:#f6f5f2;--card:#fffdf8;--card2:#fbfaf7;--text:#25231f;--muted:#6f6b63;--primary:#0d6b6f;--line:#d8d4cb;--accent:#d9e9e7;--shadow:0 8px 24px rgba(0,0,0,.08);--radius:18px;font-family:Arial,sans-serif}
+[data-theme="dark"]{--bg:#141312;--card:#1d1b19;--card2:#23211f;--text:#ece8df;--muted:#a19a8f;--primary:#59aeb1;--line:#3a3733;--accent:#273536;--shadow:0 8px 24px rgba(0,0,0,.35)}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);line-height:1.5} .wrap{max-width:1200px;margin:auto;padding:20px}
+header{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;flex-wrap:wrap;margin-bottom:24px}.brand{display:flex;gap:14px;align-items:center}.logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--primary),var(--accent));display:grid;place-items:center;font-weight:700;color:#fff}
+h1{margin:0;font-size:clamp(1.6rem,2vw,2.4rem)} p{margin:.35rem 0 0;color:var(--muted)}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.badge{background:var(--accent);color:var(--primary);border:1px solid var(--line);padding:.35rem .65rem;border-radius:999px;font-size:.86rem;font-weight:700}
+.toolbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+label{display:block;font-weight:700;font-size:.9rem;margin-bottom:6px} input,select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-size:1rem}
+.buttons{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}.btn{border:none;border-radius:999px;padding:10px 14px;cursor:pointer;font-weight:700}.primary{background:var(--primary);color:#fff}.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+.quick{background:var(--card2);border:1px solid var(--line);color:var(--text)} .meta{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:.95rem;margin:10px 0 16px}
+.grid{display:grid;gap:14px}.job{display:grid;gap:10px}.job h3{margin:0;font-size:1.15rem}.top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.company{font-weight:700}.tags{display:flex;flex-wrap:wrap;gap:8px}.tag{padding:.3rem .55rem;border-radius:999px;background:var(--accent);color:var(--primary);font-size:.8rem;font-weight:700}.links{display:flex;gap:10px;flex-wrap:wrap}.link{display:inline-block;text-decoration:none;background:transparent;border:1px solid var(--line);padding:10px 14px;border-radius:12px;color:var(--text);font-weight:700}.link.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+.tabs{display:flex;gap:10px;margin:18px 0 14px;flex-wrap:wrap}.tab{padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--text);font-weight:700;cursor:pointer}.tab.active{background:var(--primary);color:#fff;border-color:var(--primary)} .hidden{display:none}
+.statusbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}.metric{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:14px}.metric strong{display:block;font-size:1.7rem}.empty{padding:22px;text-align:center;color:var(--muted)} footer{margin:24px 0 10px;color:var(--muted);font-size:.9rem;text-align:center}
+@media (max-width:700px){header{flex-direction:column}.toolbar{grid-template-columns:1fr}.links{flex-direction:column}.link{width:100%;text-align:center}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <div class="logo">A</div>
+    <div>
+      <h1>Alex Jobs — Quality Europe Pro</h1>
+      <p>Dashboard de busca e candidatura para cargos de qualidade na Europa, com favoritos, notas e painel de status.</p>
+      <div class="badges">
+        <span class="badge">Europa inteira</span><span class="badge">Remote</span><span class="badge">LinkedIn</span><span class="badge">EURES</span><span class="badge">Indeed</span><span class="badge">StepStone</span><span class="badge">Notas</span><span class="badge">Status</span>
+      </div>
+    </div>
+  </div>
+  <button id="themeBtn" class="btn ghost">🌙 Tema</button>
+</header>
+
+<section class="card">
+  <div class="toolbar">
+    <div><label for="q">Cargo / palavra-chave</label><input id="q" value="supplier quality engineer" placeholder="Ex.: supplier quality engineer"></div>
+    <div><label for="country">País</label><select id="country"><option selected value="">Europa inteira</option><option value="Austria">Áustria</option><option value="Germany">Alemanha</option><option value="Switzerland">Suíça</option><option value="Netherlands">Países Baixos</option><option value="France">França</option><option value="Spain">Espanha</option><option value="Italy">Itália</option><option value="Portugal">Portugal</option><option value="Belgium">Bélgica</option><option value="Poland">Polônia</option><option value="remote">Somente remoto</option></select></div>
+    <div><label for="remote">Tipo</label><select id="remote"><option value="all">Todos</option><option value="remote">Somente remotas</option></select></div>
+    <div><label for="limit">Quantidade</label><select id="limit"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></div>
+  </div>
+  <div class="buttons">
+    <button class="btn primary" id="searchBtn">Buscar vagas</button>
+    <button class="btn ghost" id="resetBtn">Limpar</button>
+    <button class="btn quick" data-s='supplier quality engineer'>Supplier Quality</button>
+    <button class="btn quick" data-s='quality engineer'>Quality Engineer</button>
+    <button class="btn quick" data-s='quality assurance'>QA</button>
+    <button class="btn quick" data-s='process quality'>Process Quality</button>
+    <button class="btn quick" data-s='quality manager'>Quality Manager</button>
+    <button class="btn quick" data-s='remote'>Remote</button>
+  </div>
+  <div class="meta" id="meta"></div>
+</section>
+
+<section class="card">
+  <label for="notes">Notas rápidas</label>
+  <input id="notes" placeholder="Ex.: já apliquei, resposta pendente, prioridade alta">
+</section>
+
+<section class="card">
+  <label>Status geral</label>
+  <div class="statusbox" id="statusMetrics"></div>
+</section>
+
+<section class="card">
+  <label for="statusFilter">Filtrar por status</label>
+  <select id="statusFilter"><option value="all">Todos</option><option value="to_apply">Para aplicar</option><option value="applied">Aplicado</option><option value="interview">Entrevista</option><option value="followup">Follow-up</option><option value="rejected">Rejeitado</option></select>
+</section>
+
+<section class="card">
+  <label>Segurança e privacidade</label>
+  <div class="statusbox">
+    <div class="metric"><strong>HTTPS</strong><span>GitHub Pages com HTTPS</span></div>
+    <div class="metric"><strong>Sem login</strong><span>Não coleta senha nem dados sensíveis</span></div>
+    <div class="metric"><strong>Sem backend</strong><span>Menos risco de falha e ataque</span></div>
+    <div class="metric"><strong>Dados locais</strong><span>Favoritos, notas e status ficam no navegador</span></div>
+  </div>
+</section>
+
+<div class="tabs">
+  <button class="tab active" data-tab="results">Resultados</button>
+  <button class="tab" data-tab="saved">Favoritos</button>
+  <button class="tab" data-tab="status">Painel</button>
+</div>
+
+<section id="results" class="grid"></section>
+<section id="saved" class="grid hidden"></section>
+<section id="panel" class="grid hidden"></section>
+<footer>Fontes: Arbeitnow, EURES, EU Remote Jobs, Eurojobs, LinkedIn Jobs, Indeed e StepStone.</footer>
+</div>
+<script>
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+const STORAGE='alex_jobs_favs', NOTES='alex_jobs_notes', STATUS='alex_jobs_status';
+const favs=()=>JSON.parse(localStorage.getItem(STORAGE)||'[]');
+const saveFavs=a=>localStorage.setItem(STORAGE,JSON.stringify(a));
+const notes=()=>localStorage.getItem(NOTES)||'';
+const statuses=()=>JSON.parse(localStorage.getItem(STATUS)||'{}');
+const saveNotes=v=>localStorage.setItem(NOTES,v);
+const saveStatuses=v=>localStorage.setItem(STATUS,JSON.stringify(v));
+const esc=s=>String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+let jobs=[];
+$('#notes').value=notes();
+const themeBtn=$('#themeBtn');
+let dark=window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.setAttribute('data-theme',dark?'dark':'light');themeBtn.textContent=dark?'☀️ Tema':'🌙 Tema';themeBtn.onclick=()=>{dark=!dark;document.documentElement.setAttribute('data-theme',dark?'dark':'light');themeBtn.textContent=dark?'☀️ Tema':'🌙 Tema'};
+$$('.tab').forEach(t=>t.onclick=()=>{$$('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('#results').classList.toggle('hidden',t.dataset.tab!=='results');$('#saved').classList.toggle('hidden',t.dataset.tab!=='saved');$('#panel').classList.toggle('hidden',t.dataset.tab!=='status'); if(t.dataset.tab==='saved')renderSaved(); if(t.dataset.tab==='status')renderPanel();});
+function stLabel(st){return {to_apply:'Para aplicar',applied:'Aplicado',interview:'Entrevista',followup:'Follow-up',rejected:'Rejeitado'}[st]||'Para aplicar'}
+function fidOf(j){return j.id||j.url||j.title}
+function isFav(fid){return favs().some(x=>(x.id||x.url||x.title)===fid)}
+function card(j, saved=false){const fid=fidOf(j); const st=statuses()[fid]||'to_apply'; const linked=`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(j.title||$('#q').value)}&location=${encodeURIComponent(j.location||$('#country').value||'Europe')}`; return `<article class="card job"><div class="top"><div><div class="company">${esc(j.company_name||'Empresa')}</div><h3>${esc(j.title||'Vaga')}</h3><div style="color:var(--muted)">${esc(j.location||'Local não informado')} ${j.remote?'• Remota':''}</div><div style="font-size:.9rem;color:var(--muted)">Fonte: ${esc(j.source||'manual')}</div><div class="badge" style="display:inline-block;margin-top:8px">${stLabel(st)}</div></div><button class="btn ghost fav" data-id="${esc(fid)}">${isFav(fid)||saved?'★':'☆'} Favorito</button></div><div class="tags">${(j.tags||[]).slice(0,6).map(t=>`<span class="tag">${esc(t)}</span>`).join('')||'<span class="tag">Sem tags</span>'}</div><div class="links"><a class="link primary" href="${j.url}" target="_blank">Abrir vaga</a><a class="link" href="${linked}" target="_blank">LinkedIn</a><a class="link" href="https://eures.europa.eu/jobseekers_en" target="_blank">EURES</a><a class="link" href="https://www.eurojobs.com" target="_blank">Eurojobs</a></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn quick set-status" data-id="${esc(fid)}" data-status="to_apply">Para aplicar</button><button class="btn quick set-status" data-id="${esc(fid)}" data-status="applied">Aplicado</button><button class="btn quick set-status" data-id="${esc(fid)}" data-status="interview">Entrevista</button><button class="btn quick set-status" data-id="${esc(fid)}" data-status="followup">Follow-up</button><button class="btn quick set-status" data-id="${esc(fid)}" data-status="rejected">Rejeitado</button></div></article>`}
+function bindFavs(){$$('.fav').forEach(b=>b.onclick=()=>{const id=b.dataset.id; let s=favs(); const idx=s.findIndex(x=>(x.id||x.url||x.title)===id); if(idx>=0)s.splice(idx,1); else {const j=jobs.find(x=>fidOf(x)===id); if(j)s.push(j);} saveFavs(s); render();});}
+function bindStatuses(){$$('.set-status').forEach(b=>b.onclick=()=>{const id=b.dataset.id, st=b.dataset.status; const m=statuses(); m[id]=st; saveStatuses(m); render();});}
+function renderSaved(){const s=favs(); $('#saved').innerHTML=s.length?s.map(j=>card(j,true)).join(''):'<div class="card empty">Sem favoritos ainda.</div>'; bindFavs(); bindStatuses();}
+function renderPanel(){ const s=statuses(); const counts={to_apply:0,applied:0,interview:0,followup:0,rejected:0}; Object.values(s).forEach(v=>{if(counts[v]!==undefined) counts[v]++;}); $('#statusMetrics').innerHTML=Object.entries(counts).map(([k,v])=>`<div class="metric"><strong>${v}</strong><span>${stLabel(k)}</span></div>`).join(''); const rows=jobs.filter(j=>s[fidOf(j)]).slice(0,20); $('#panel').innerHTML = rows.length ? rows.map(j=>card(j)).join('') : '<div class="card empty">Sem vagas com status ainda.</div>'; bindFavs(); bindStatuses(); }
+function render(){ const q=$('#q').value.trim().toLowerCase(); const country=$('#country').value; const remote=$('#remote').value; const lim=Number($('#limit').value); const sf=$('#statusFilter').value||'all'; let x=jobs.filter(j=>{const fid=fidOf(j); const st=statuses()[fid]||'to_apply'; const text=[j.title,j.company_name,(j.description||''),(j.tags||[]).join(' '),j.location].join(' ').toLowerCase(); const okQ=!q||text.includes(q); const okCountry=country==='remote'?!!j.remote:(!country||text.includes(country.toLowerCase())); const okRemote=remote==='remote'?!!j.remote:true; const okStatus=sf==='all'||st===sf; return okQ&&okCountry&&okRemote&&okStatus;}).slice(0,lim); $('#meta').innerHTML=`<span>${x.length} vaga(s)</span><span>Europa inteira</span><span>Favoritos no navegador</span><span>Status ativo</span>`; $('#results').innerHTML=x.length?x.map(card).join(''):'<div class="card empty">Nenhuma vaga encontrada. Tente termos em inglês.</div>'; bindFavs(); bindStatuses(); }
+async function load(){ $('#results').innerHTML='<div class="card empty">Carregando vagas...</div>'; try{const r=await fetch('https://www.arbeitnow.com/api/job-board-api'); const d=await r.json(); jobs=(d.data||[]).map(j=>({id:j.slug||j.url||j.title,title:j.title,company_name:j.company_name,location:j.location,remote:!!j.remote,tags:j.tags||[],url:j.url,description:j.description,source:'Arbeitnow'})); jobs.unshift({id:'eures',title:'Buscar no EURES',company_name:'EURES',location:'Europe',remote:true,tags:['Europe','Official portal'],url:'https://eures.europa.eu/jobseekers_en',description:'Portal oficial europeu de mobilidade de emprego.',source:'EURES'}); jobs.unshift({id:'eurojobs',title:'Buscar no Eurojobs',company_name:'Eurojobs',location:'Europe',remote:true,tags:['Europe','Multilingual'],url:'https://www.eurojobs.com',description:'Portal multilíngue de empregos na Europa.',source:'Eurojobs'}); jobs.unshift({id:'remoteok',title:'Buscar no Remote OK',company_name:'Remote OK',location:'Europe',remote:true,tags:['Remote','Worldwide'],url:'https://remoteok.com/remote-europe-jobs',description:'Vagas remotas em vários países, útil para Europa e fusos europeus.',source:'Remote OK'}); jobs.unshift({id:'wework',title:'Buscar no We Work Remotely',company_name:'We Work Remotely',location:'Europe',remote:true,tags:['Remote','Global'],url:'https://weworkremotely.com',description:'Plataforma forte para vagas remotas globais.',source:'We Work Remotely'}); render(); renderPanel(); }catch(e){ $('#results').innerHTML='<div class="card empty">Erro ao carregar vagas.</div>'; } }
+$('#notes').oninput=e=>saveNotes(e.target.value); $('#statusFilter').onchange=render; $('#searchBtn').onclick=render; $('#resetBtn').onclick=()=>{$('#q').value='supplier quality engineer'; $('#country').value=''; $('#remote').value='all'; $('#limit').value='20'; $('#notes').value=''; $('#statusFilter').value='all'; saveNotes(''); render(); renderPanel();}; $$('.quick').forEach(b=>b.onclick=()=>{const s=b.dataset.s; $('#q').value=s; if(s==='remote') $('#country').value='remote'; render();}); load();
+</script>
+</body>
+</html>
