@@ -100,7 +100,12 @@
     "720063089",
     "720226190",
     "720213758",
-    "719763121"
+    "719763121",
+    "720856867",
+    "720767662",
+    "720863432",
+    "720269817",
+    "720679172"
   ],
   "created": "2026-06-09",
   "note": "Lista de vagas ja enviadas por email via GitHub Actions. O script mantem apenas as ultimas 200 para economizar espaco."
